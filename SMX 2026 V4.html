@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Screenplay Matrix 2026 – Version 4</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: linear-gradient(165deg, #1e293b 0%, #334155 45%, #1e3a5f 100%);
+    color: #e2e8f0;
+    line-height: 1.5;
+    padding: 28px 16px;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 26px;
+  }
+
+  header h1 {
+    font-size: 2.3rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  header p {
+    color: #94a3b8;
+    margin-top: 6px;
+    font-size: 1.05rem;
+    font-weight: 500;
+  }
+
+  .card {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+
+  .input-group {
+    margin-bottom: 16px;
+  }
+
+  .input-group label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #60a5fa;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .input-group textarea {
+    width: 100%;
+    background: #1e293b;
+    border: 1.5px solid #334155;
+    border-radius: 8px;
+    color: #e2e8f0;
+    padding: 11px 13px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 64px;
+  }
+
+  .input-group textarea:focus {
+    outline: none;
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+  }
+
+  .buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  button {
+    flex: 1;
+    min-width: 140px;
+    padding: 14px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  #generateBtn {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: white;
+  }
+  #generateBtn:hover {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+  }
+
+  #resetBtn {
+    background: #1e293b;
+    color: #94a3b8;
+    border: 1.5px solid #334155;
+  }
+  #resetBtn:hover {
+    background: #334155;
+    color: #e2e8f0;
+  }
+
+  #downloadBtn {
+    background: #0f766e;
+    color: white;
+  }
+  #downloadBtn:hover {
+    background: #0d9488;
+  }
+
+  #printBtn {
+    background: #b45309;
+    color: white;
+  }
+  #printBtn:hover {
+    background: #d97706;
+  }
+
+  .credits {
+    text-align: center;
+    margin: 8px 0 22px;
+    font-size: 0.95rem;
+    color: #94a3b8;
+    letter-spacing: 0.3px;
+  }
+  .credits strong {
+    color: #cbd5e1;
+  }
+
+  .output-section h2 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #94a3b8;
+    font-weight: 600;
+  }
+
+  #outline {
+    width: 100%;
+    min-height: 360px;
+    background: #1e293b;
+    border: 1.5px solid #334155;
+    border-radius: 8px;
+    color: #e2e8f0;
+    padding: 14px;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.87rem;
+    white-space: pre-wrap;
+    resize: vertical;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #059669;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-weight: 700;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 100;
+    pointer-events: none;
+  }
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 18px;
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  /* Print styles for cleaner PDF */
+  @media print {
+    body {
+      background: white;
+      color: black;
+      padding: 20px;
+    }
+    .card, header, .credits, footer, .buttons, .toast {
+      display: none !important;
+    }
+    #outline {
+      display: block !important;
+      background: white;
+      color: black;
+      border: none;
+      font-size: 11pt;
+      min-height: auto;
+    }
+    .output-section h2 {
+      display: none;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>SMX 2026</h1>
+      <p>Screenplay Matrix 2026 Version 4</p>
+    </header>
+
+    <div class="card">
+      <div class="input-group">
+        <label>1 · Title</label>
+        <textarea id="title" placeholder="e.g. Patches"></textarea>
+      </div>
+
+      <div class="input-group">
+        <label>2 · Protagonist</label>
+        <textarea id="protagonist" placeholder="e.g. Captain Clark, one-eyed privateer..."></textarea>
+      </div>
+
+      <div class="input-group">
+        <label>3 · Setting</label>
+        <textarea id="setting" placeholder="e.g. 1700s Caribbean during the Pirate heyday"></textarea>
+      </div>
+
+      <div class="input-group">
+        <label>4 · Conflict / Plot</label>
+        <textarea id="conflict" placeholder="e.g. Keeping alive and prosperous..."></textarea>
+      </div>
+
+      <div class="input-group">
+        <label>5 · Tone / Snapshot</label>
+        <textarea id="tone" placeholder="e.g. Cannons and Adventure for all"></textarea>
+      </div>
+
+      <div class="input-group">
+        <label>6 · Supporting Character / Subplot (Buddy or Love Interest)</label>
+        <textarea id="subplot" placeholder="e.g. Isabella, sharp-tongued Spanish cartographer..."></textarea>
+      </div>
+
+      <div class="buttons">
+        <button id="generateBtn">GENERATE</button>
+        <button id="resetBtn">RESET</button>
+        <button id="downloadBtn">Download TXT</button>
+        <button id="printBtn">Print / Save as PDF</button>
+      </div>
+    </div>
+
+    <div class="credits">
+      Idea: <strong>Paul Gitschner</strong> · Code: <strong>GROK Ai</strong>
+    </div>
+
+    <div class="card output-section">
+      <h2>Outline Prompt (appears here + can be downloaded or printed)</h2>
+      <textarea id="outline" readonly placeholder="Click GENERATE – the full prompt will appear here..."></textarea>
+    </div>
+
+    <footer>Screenplay Matrix 2026 Version 4</footer>
+  </div>
+
+  <div class="toast" id="toast">Prompt ready!</div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      var titleEl       = document.getElementById('title');
+      var protagonistEl = document.getElementById('protagonist');
+      var settingEl     = document.getElementById('setting');
+      var conflictEl    = document.getElementById('conflict');
+      var toneEl        = document.getElementById('tone');
+      var subplotEl     = document.getElementById('subplot');
+      var outlineEl     = document.getElementById('outline');
+      var toast         = document.getElementById('toast');
+
+      document.getElementById('generateBtn').addEventListener('click', function() {
+        var title       = (titleEl.value || '').trim()       || '[TITLE]';
+        var protagonist = (protagonistEl.value || '').trim() || '[PROTAGONIST]';
+        var setting     = (settingEl.value || '').trim()     || '[SETTING]';
+        var conflict    = (conflictEl.value || '').trim()    || '[CONFLICT]';
+        var tone        = (toneEl.value || '').trim()        || '[TONE]';
+        var subplot     = (subplotEl.value || '').trim()     || '[SUPPORTING CHARACTER / SUBPLOT]';
+
+        // Improved formatting with blank lines between every heading and scene
+        var prompt = 'You are an expert screenwriter. Using the seed material below, write a complete classical 3-act screenplay outline expanded into exactly 27 numbered scenes.\n\n' +
+          'SEED MATERIAL\n' +
+          '-------------\n\n' +
+          'TITLE: ' + title + '\n\n' +
+          'PROTAGONIST: ' + protagonist + '\n\n' +
+          'SETTING: ' + setting + '\n\n' +
+          'CONFLICT / PLOT: ' + conflict + '\n\n' +
+          'TONE / SNAPSHOT: ' + tone + '\n\n' +
+          'SUPPORTING CHARACTER / SUBPLOT: ' + subplot + '\n\n' +
+          'INSTRUCTIONS\n' +
+          '------------\n\n' +
+          '- Use a classical dramatic 3-act structure.\n' +
+          '- Expand into exactly 27 numbered scenes (9 major beats × 3 scenes each).\n' +
+          '- Group the scenes clearly under ACT 1 (scenes 1-9), ACT 2 (scenes 10-18), ACT 3 (scenes 19-27).\n' +
+          '- Every scene must advance or obstruct the main storyline.\n' +
+          '- Create a strong secondary plotline featuring the supporting character (buddy or love interest).\n' +
+          '- The subplot must be tightly intertwined: it should either obstruct the protagonist’s goals or become a major contribution to the solution of the main plot.\n' +
+          '- The subplot must appear in 24–33% of the 27 scenes (i.e. 7 to 9 scenes). Overlap with the main plot is allowed and encouraged.\n' +
+          '- Introduce a couple of NAMED NPC characters (give each a name and occupation). These NPCs should be local to specific locations the story passes through.\n' +
+          '- Use these NPCs in short interactions with the protagonist and/or the supporting character. The interactions should demonstrate the unique flavour of that location and simultaneously reveal a little of the main characters’ personalities (examples of style: Ralf the doorman, Kip the cab driver, Susie the maid).\n' +
+          '- Keep the tone and genre feel of the snapshot.\n' +
+          '- Be specific, cinematic, and concrete in every scene description.\n' +
+          '- Put a blank line between every heading and every scene so the document is easy to read.\n\n' +
+          'OUTPUT FORMAT (strictly follow this – include blank lines as shown)\n' +
+          '------------------------------------\n\n' +
+          'TITLE: ' + title + '\n\n' +
+          'ACT 1\n\n' +
+          '1. [scene]\n\n' +
+          '2. [scene]\n\n' +
+          '3. [scene]\n\n' +
+          '4. [scene]\n\n' +
+          '5. [scene]\n\n' +
+          '6. [scene]\n\n' +
+          '7. [scene]\n\n' +
+          '8. [scene]\n\n' +
+          '9. [scene]\n\n' +
+          'ACT 2\n\n' +
+          '10. [scene]\n\n' +
+          '11. [scene]\n\n' +
+          '12. [scene]\n\n' +
+          '13. [scene]\n\n' +
+          '14. [scene]\n\n' +
+          '15. [scene]\n\n' +
+          '16. [scene]\n\n' +
+          '17. [scene]\n\n' +
+          '18. [scene]\n\n' +
+          'ACT 3\n\n' +
+          '19. [scene]\n\n' +
+          '20. [scene]\n\n' +
+          '21. [scene]\n\n' +
+          '22. [scene]\n\n' +
+          '23. [scene]\n\n' +
+          '24. [scene]\n\n' +
+          '25. [scene]\n\n' +
+          '26. [scene]\n\n' +
+          '27. [scene]\n\n' +
+          'CAST\n\n' +
+          '(List characters in order of importance – Name followed by a short description)\n\n' +
+          'LOCATIONS\n\n' +
+          '(List the major locations in the order they appear / are travelled through in the story)\n\n' +
+          'Now generate the full 27-scene outline followed by the CAST and LOCATIONS lists. Remember to put a blank line between every heading and every scene.';
+
+        outlineEl.value = prompt;
+
+        // Copy to clipboard
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(prompt).then(function() {
+            showToast('Prompt copied to clipboard!');
+          }).catch(function() {
+            showToast('Prompt ready – use Download or copy manually');
+          });
+        } else {
+          outlineEl.select();
+          try {
+            document.execCommand('copy');
+            showToast('Prompt copied!');
+          } catch (e) {
+            showToast('Prompt ready – use Download TXT button');
+          }
+        }
+      });
+
+      document.getElementById('resetBtn').addEventListener('click', function() {
+        titleEl.value = '';
+        protagonistEl.value = '';
+        settingEl.value = '';
+        conflictEl.value = '';
+        toneEl.value = '';
+        subplotEl.value = '';
+        outlineEl.value = '';
+      });
+
+      // Download as TXT
+      document.getElementById('downloadBtn').addEventListener('click', function() {
+        var text = outlineEl.value;
+        if (!text.trim()) {
+          showToast('Generate a prompt first!');
+          return;
+        }
+        var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'SMX-2026-Prompt.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('TXT file downloaded!');
+      });
+
+      // Print / Save as PDF
+      document.getElementById('printBtn').addEventListener('click', function() {
+        if (!outlineEl.value.trim()) {
+          showToast('Generate a prompt first!');
+          return;
+        }
+        window.print();
+      });
+
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(function() {
+          toast.classList.remove('show');
+        }, 2800);
+      }
+    });
+  </script>
+</body>
+</html>
